@@ -38,6 +38,9 @@ while running:
     #Draw y-axis
     pygame.draw.lines(screen, "black", False, [(0,screen.get_height()/2),(screen.get_width(),screen.get_height()/2)], width=2)
 
+    # Create a list of arrow objects
+
+    # loop thorugh arrow object list and draw them
 
     # Draw an arrow from origo to the mouse tip
     if( (not will_draw_arrow) & pygame.mouse.get_pressed()[0]):
