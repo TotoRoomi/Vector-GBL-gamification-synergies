@@ -6,3 +6,35 @@ In this project we demonstrate bad gamification wherein a learning experience is
 The game is about simple Vector addition, subtraction and multiplication. You learn how to do these things visually.
 
 ![vecotor game diagram](Vektorspel_i_python.jpg)
+
+
+    
+
+## Spelfunktioner
+scenario och utmaning 
+
+### Regler för spelet
+- En vektor på skärmen utgör målet. Ta dig från origo till spetsen av denna vektor givet andra vektorer i en "verktygslåda".
+- Använd vektorerna i verktygslådan till att bygga målet 
+- senaste vektorn börjar där förra slutade
+- varje ny vektor kan läggas till i en lista som gör det enkelt att undo (radera senaste i listan)
+
+### Extra gamification tillbehör som vi kan lägga till vid ett senare tillfälle
+- poäng
+- leaderboards
+- störigt du-vann-ljud
+- liv
+
+- verktygslåda (lätt/svårt?)
+- undo/redo (lätt/svårt??)
+
+
+Första test exemplet;
+
+Den vertikala vektorn är given och de "sneda" vektorerna finns i verktygslådan, skapa den horizontala vektorn med hjälp av vektorerna i verktygslådan.
+|\
+| \
+|  \
+|  /
+| /
+|/

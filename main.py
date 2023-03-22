@@ -1,3 +1,15 @@
+'''
+matrix[][] -> graf x axel och y axel 
+       0 -> a   -a -> a 
+                 y
+                 |
+                 |
+       ---------- ---------- x
+                 |
+                 |
+'''
+
+
 def index_finder(graph_point,axis_scale):
     '''
     param graph_point: a point on the visual graph going from -axis_scale to axis_scale on both
