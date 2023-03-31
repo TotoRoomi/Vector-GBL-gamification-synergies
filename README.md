@@ -7,7 +7,8 @@ The game is about simple Vector addition, subtraction and multiplication. You le
 
 ![vecotor game diagram](Vektorspel_i_python.jpg)
 
-
+## To-Do
+- Siffror på spelplanen
     
 
 ## Spelfunktioner
@@ -38,3 +39,8 @@ Den vertikala vektorn är given och de "sneda" vektorerna finns i verktygslådan
 |  /
 | /
 |/
+
+
+
+
+conv_coordinates(0,1) = (123,500)
