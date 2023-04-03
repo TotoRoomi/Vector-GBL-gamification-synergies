@@ -13,6 +13,7 @@ The game is about simple Vector addition, subtraction and multiplication. You le
 
 ## Spelfunktioner
 scenario och utmaning 
+- DONE knapp efter man valt klart pilar 
 
 ### Regler för spelet
 - En vektor på skärmen utgör målet. Ta dig från origo till spetsen av denna vektor givet andra vektorer i en "verktygslåda".
