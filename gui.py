@@ -1,7 +1,8 @@
 import pygame
 import random
-import arrow
+import Arrow
 import Buttons
+import time 
 
 # pygame setup
 pygame.init()
@@ -23,6 +24,7 @@ def conv_coord(x_coord,y_coord):
     delta_x = 20 
     delta_y = 20
     return pygame.Vector2([(screen.get_width()/2 + x_coord*delta_x),(screen.get_height()/2 + (-1)*y_coord*delta_y)])
+    
     
 
 # END OF FUNCTIONS
@@ -52,17 +54,27 @@ assignmentButton = Buttons.Button(screen, conv_coord(-30,-5).x, conv_coord(-30,-
 
 projx = Buttons.Button(screen, conv_coord(-28,-11).x, conv_coord(-28,-11).y,4*20,2*20,'Proj_x(V)')
 
+projy = Buttons.Button(screen, conv_coord(-28,-8).x, conv_coord(-28,-8).y,4*20,2*20,'Proj_y(V)')
+
+
 middleButton = Buttons.Button(screen, conv_coord(-22,-11).x, conv_coord(-28,-11).y,4*20,2*20,'-V')
 
 rightButton = Buttons.Button(screen, conv_coord(-16,-11).x, conv_coord(-28,-11).y,4*20,2*20,'Perpj_n(V)')
 
+undo = Buttons.Button(screen, conv_coord(-28,-7).x, conv_coord(-28,-6).y,4*11,2*11,'undo')
 
 
-allButtons = [middleButton,rightButton,projx]
+allButtons = [middleButton,rightButton,projx,undo,projy]
 
 
-testArrow = arrow.arrow(screen, conv_coord(0,0), conv_coord(10,10))
+testArrow = Arrow.arrow(screen, conv_coord(0,0), conv_coord(10,10))
 
+arrowHistory = list()
+
+last_x = list()
+last_y = list()
+last_x.append(0)
+last_y.append(0)
 
 # GAME LOOP
 while running:
@@ -137,6 +149,10 @@ while running:
    '''
    ## TEST 
 
+    #######################
+    ##     BUTTONS       ##
+    #######################
+
     if(not assignmentButton.buttonActive):
          assignmentButton.process()
     else:
@@ -145,15 +161,56 @@ while running:
         testArrow.draw_arrow()
         for button in allButtons:
             button.process()
-        '''
-        if(projx.buttonActive):
-                endPosition.x = x_rand
-                #draw_arrow(screen, conv_coord(0,0), conv_coord(x_rand,y_rand), pygame.Color("red"), 5, 10, 6)
-        if(middleButton.buttonActive):
-                #draw_arrow(screen, conv_coord(0,0), conv_coord(x_rand,0), pygame.Color("green"), 5, 10, 6)
-        if(rightButton.buttonActive):
-                #draw_arrow(screen, conv_coord(0,0), conv_coord(0,y_rand), pygame.Color("blue"), 5, 10, 6)
-        '''
+
+        if(allButtons[0].buttonActive): # -V 
+            try:
+                arrowHistory.append(Arrow.arrow(screen, conv_coord(last_x[-1],last_y[-1]), conv_coord(last_x[-1]-10,last_y[-1]-10)))
+                last_x.append(last_x[-1]-10)
+                last_y.append(last_y[-1]-10)
+                allButtons[0].buttonActive = False # annars spammar den pga man "klickar" 60 ggr / sek
+            except AttributeError:
+                print('could not add -V')
+        if(allButtons[1].buttonActive): # perpj_(V)
+            try:
+                arrowHistory.append(Arrow.arrow(screen, conv_coord(last_x[-1],last_y[-1]), conv_coord(last_x[-1]-10,last_y[-1]-10)))
+                last_x.append(last_x[-1]-10)
+                last_y.append(last_y[-1]-10)
+                allButtons[1].buttonActive = False # annars spammar den pga man "klickar" 60 ggr / sek
+            except AttributeError:
+                print('could not add -V')
+        if(allButtons[2].buttonActive): # projection of V on x 
+            try:
+                arrowHistory.append(Arrow.arrow(screen, conv_coord(last_x[-1],last_y[-1]), conv_coord(last_x[-1]+10,last_y[-1])))
+                last_x.append(last_x[-1]+10)
+                last_y.append(last_y[-1])
+                allButtons[2].buttonActive = False # annars spammar den pga man "klickar" 60 ggr / sek
+            except AttributeError:
+                print('could not add projection of V on x')
+        if(allButtons[4].buttonActive): # projection of V on y
+            try:
+                arrowHistory.append(Arrow.arrow(screen, conv_coord(last_x[-1],last_y[-1]), conv_coord(last_x[-1],last_y[-1]+10)))
+                last_x.append(last_x[-1])
+                last_y.append(last_y[-1]+10)
+                allButtons[4].buttonActive = False # annars spammar den pga man "klickar" 60 ggr / sek
+            except AttributeError:
+                print('could not add projection of V on x')
+        if(allButtons[3].buttonActive and len(arrowHistory)>0): # projection of V on x 
+            try:
+                arrow = arrowHistory.pop()
+                last_x.pop()
+                last_y.pop()
+                allButtons[3].buttonActive = False 
+            except AttributeError:
+                print('could not remove last added arrow')
+            #draw_arrow(screen, conv_coord(0,0), conv_coord(x_rand,y_rand), pygame.Color("red"), 5, 10, 6)
+        #if(allButtons[0].buttonActive): # -V
+            #draw_arrow(screen, conv_coord(0,0), conv_coord(x_rand,0), pygame.Color("green"), 5, 10, 6)
+        #if(allButtons[1].buttonActive): # perpendicular V 
+            #draw_arrow(screen, conv_coord(0,0), conv_coord(0,y_rand), pygame.Color("blue"), 5, 10, 6)
+        
+    if(len(arrowHistory) > 0):
+        for arrow in arrowHistory:
+            arrow.draw_arrow()
 
 
     # flip() the display to put your work on screen
