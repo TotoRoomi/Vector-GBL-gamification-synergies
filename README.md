@@ -14,12 +14,13 @@ python3 gui.py
 ```
 
 ## To-Do
-- Siffror på spelplanen
+- new game after success 
+- Score
+
     
 
 ## Spelfunktioner
 scenario och utmaning 
-- DONE knapp efter man valt klart pilar 
 
 ### Regler för spelet
 - En vektor på skärmen utgör målet. Ta dig från origo till spetsen av denna vektor givet andra vektorer i en "verktygslåda".
@@ -33,8 +34,8 @@ scenario och utmaning
 - störigt du-vann-ljud
 - liv
 
-- verktygslåda (lätt/svårt?)
-- undo/redo (lätt/svårt??)
+- verktygslåda 
+- undo/redo 
 
 
 Första test exemplet;
