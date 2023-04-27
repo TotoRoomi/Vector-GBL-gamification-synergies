@@ -46,7 +46,7 @@ font4 = pygame.font.SysFont('Arial', 16, bold=True)
 
 # get random vector positions
 startPoint = pygame.Vector2(0,0)
-goalVecEndPoint = pygame.Vector2(random.randint(-5,15),random.randint(-5,15))
+goalVecEndPoint = [pygame.Vector2(random.randint(-5,15),random.randint(-5,15))]
 
 x_rand = random.randint(-20,20)
 y_rand = random.randint(-15,15)
@@ -69,13 +69,15 @@ rightButton = Buttons.Button(screen, conv_coord(-16,-11).x, conv_coord(-28,-11).
 
 undo = Buttons.Button(screen, conv_coord(-28,-6).x, conv_coord(-28,-6).y,4*11,2*11,'undo')
 
-info = Buttons.Button(screen, conv_coord(-15,-6).x, conv_coord(-15,-6).y,4*11,2*11,'info')
+info = Buttons.Button(screen, conv_coord(-14,-6).x, conv_coord(-14,-6).y,4*7,2*11,'info')
 
-allButtons = [middleButton,rightButton,projx,undo,projy,info]
+nextGame = Buttons.Button(screen, conv_coord(-19,-6).x, conv_coord(-19,-6).y,4*16,2*11,'next game')
+
+allButtons = [middleButton,rightButton,projx,undo,projy,info,nextGame]
 
 
-testArrow = Arrow.arrow(screen, conv_coord(0,0), conv_coord(goalVecEndPoint.x,goalVecEndPoint.y))
 
+goalArrows = [Arrow.arrow(screen, conv_coord(0,0), conv_coord(goalVecEndPoint[-1].x,goalVecEndPoint[-1].y))]
 arrowHistory = list()
 
 last_x = list()
@@ -173,39 +175,39 @@ while running:
     else:
         pygame.draw.rect(screen, "grey", pygame.Rect(conv_coord(-30,-13).x, conv_coord(-30,-5).y, 20*20, 10*20))
         #draw_arrow(screen, , conv_coord(x_rand,y_rand), pygame.Color("black"), 5, 10, 6)
-        testArrow.draw_arrow()
+        goalArrows[-1].draw_arrow()
         for button in allButtons:
             button.process()
 
         if(allButtons[0].buttonActive): # -V 
             try:
-                arrowHistory.append(Arrow.arrow(screen, conv_coord(last_x[-1],last_y[-1]), conv_coord(last_x[-1]-(goalVecEndPoint.x),last_y[-1]-(goalVecEndPoint.y))))
-                last_x.append(last_x[-1]-(goalVecEndPoint.x))
-                last_y.append(last_y[-1]-(goalVecEndPoint.y))
+                arrowHistory.append(Arrow.arrow(screen, conv_coord(last_x[-1],last_y[-1]), conv_coord(last_x[-1]-(goalVecEndPoint[-1].x),last_y[-1]-(goalVecEndPoint[-1].y))))
+                last_x.append(last_x[-1]-(goalVecEndPoint[-1].x))
+                last_y.append(last_y[-1]-(goalVecEndPoint[-1].y))
                 allButtons[0].buttonActive = False # annars spammar den pga man "klickar" 60 ggr / sek
             except AttributeError:
                 print('could not add -V')
         if(allButtons[1].buttonActive): # perpj_(V)
             try:
-                arrowHistory.append(Arrow.arrow(screen, conv_coord(last_x[-1],last_y[-1]), conv_coord(last_x[-1],last_y[-1]+(goalVecEndPoint.y))))
+                arrowHistory.append(Arrow.arrow(screen, conv_coord(last_x[-1],last_y[-1]), conv_coord(last_x[-1],last_y[-1]+(goalVecEndPoint[-1].y))))
                 last_x.append(last_x[-1])
-                last_y.append(last_y[-1]+(goalVecEndPoint.y))
+                last_y.append(last_y[-1]+(goalVecEndPoint[-1].y))
                 allButtons[1].buttonActive = False # annars spammar den pga man "klickar" 60 ggr / sek
             except AttributeError:
                 print('could not add projection of V on x')
         if(allButtons[2].buttonActive): # projection of V on x 
             try:
-                arrowHistory.append(Arrow.arrow(screen, conv_coord(last_x[-1],last_y[-1]), conv_coord(last_x[-1]+(goalVecEndPoint.x),last_y[-1])))
-                last_x.append(last_x[-1]+(goalVecEndPoint.x))
+                arrowHistory.append(Arrow.arrow(screen, conv_coord(last_x[-1],last_y[-1]), conv_coord(last_x[-1]+(goalVecEndPoint[-1].x),last_y[-1])))
+                last_x.append(last_x[-1]+(goalVecEndPoint[-1].x))
                 last_y.append(last_y[-1])
                 allButtons[2].buttonActive = False # annars spammar den pga man "klickar" 60 ggr / sek
             except AttributeError:
                 print('could not add projection of V on x')
         if(allButtons[4].buttonActive): # projection of V on y
             try:
-                arrowHistory.append(Arrow.arrow(screen, conv_coord(last_x[-1],last_y[-1]), conv_coord(last_x[-1],last_y[-1]+(goalVecEndPoint.y))))
+                arrowHistory.append(Arrow.arrow(screen, conv_coord(last_x[-1],last_y[-1]), conv_coord(last_x[-1],last_y[-1]+(goalVecEndPoint[-1].y))))
                 last_x.append(last_x[-1])
-                last_y.append(last_y[-1]+(goalVecEndPoint.y))
+                last_y.append(last_y[-1]+(goalVecEndPoint[-1].y))
                 allButtons[4].buttonActive = False # annars spammar den pga man "klickar" 60 ggr / sek
             except AttributeError:
                 print('could not add projection of V on x')
@@ -223,6 +225,19 @@ while running:
                 allButtons[3].buttonActive = False 
             except AttributeError:
                 print('could not remove last added arrow')
+        if(allButtons[6].buttonActive): # projection of V on x 
+            try:
+                goalVecEndPoint.append(pygame.Vector2(random.randint(-5,15),random.randint(-5,15)))
+                goalArrows.append(Arrow.arrow(screen, conv_coord(0,0), conv_coord(goalVecEndPoint[-1].x,goalVecEndPoint[-1].y)))
+                arrowHistory.clear()
+                last_x.clear()
+                last_y.clear()
+                last_x.append(0)
+                last_y.append(0)
+
+                allButtons[6].buttonActive = False 
+            except AttributeError:
+                print('could not start next game')
 
         # Draw user arrows
         if(len(arrowHistory) > 0):
@@ -234,12 +249,12 @@ while running:
         displayPos = font2.render(posText, True, (0, 0, 0))
         screen.blit(displayPos, conv_coord(-28,-14))
         
-        goalPosText = "Goal: ("+str(int(goalVecEndPoint.x))+","+str(int(goalVecEndPoint.y))+")"
+        goalPosText = "Goal: ("+str(int(goalVecEndPoint[-1].x))+","+str(int(goalVecEndPoint[-1].y))+")"
         displayGoalPos = font2.render(goalPosText, True, (0, 0, 0))
         screen.blit(displayGoalPos, conv_coord(-16,-14))
         
         # if current point = goal point success!
-        if (int(last_x[-1]) == int(goalVecEndPoint.x) and int(last_y[-1]) == int(goalVecEndPoint.y)):
+        if (int(last_x[-1]) == int(goalVecEndPoint[-1].x) and int(last_y[-1]) == int(goalVecEndPoint[-1].y)):
             displayPos = font3.render("SUCCESS!", True, (0, 0, 0))
             screen.blit(displayPos, conv_coord(-5,16))
     
