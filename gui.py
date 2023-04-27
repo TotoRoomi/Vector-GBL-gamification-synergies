@@ -39,10 +39,14 @@ will_draw_arrow = False
 
 # get font object
 font = pygame.font.SysFont('Arial', 8, bold=True) 
+font2 = pygame.font.SysFont('Arial', 12, bold=True) 
+font3 = pygame.font.SysFont('Arial', 40, bold=True) 
+
 
 # get random vector positions
 startPoint = pygame.Vector2(0,0)
-endPoint = pygame.Vector2(0,0)
+goalVecEndPoint = pygame.Vector2(random.randint(-5,15),random.randint(-5,15))
+print("goalVecEndPoint is : ",goalVecEndPoint)
 
 x_rand = random.randint(-20,20)
 y_rand = random.randint(-15,15)
@@ -67,7 +71,7 @@ undo = Buttons.Button(screen, conv_coord(-28,-7).x, conv_coord(-28,-6).y,4*11,2*
 allButtons = [middleButton,rightButton,projx,undo,projy]
 
 
-testArrow = Arrow.arrow(screen, conv_coord(0,0), conv_coord(10,10))
+testArrow = Arrow.arrow(screen, conv_coord(0,0), conv_coord(goalVecEndPoint.x,goalVecEndPoint.y))
 
 arrowHistory = list()
 
@@ -164,33 +168,33 @@ while running:
 
         if(allButtons[0].buttonActive): # -V 
             try:
-                arrowHistory.append(Arrow.arrow(screen, conv_coord(last_x[-1],last_y[-1]), conv_coord(last_x[-1]-10,last_y[-1]-10)))
-                last_x.append(last_x[-1]-10)
-                last_y.append(last_y[-1]-10)
+                arrowHistory.append(Arrow.arrow(screen, conv_coord(last_x[-1],last_y[-1]), conv_coord(last_x[-1]-(goalVecEndPoint.x),last_y[-1]-(goalVecEndPoint.y))))
+                last_x.append(last_x[-1]-(goalVecEndPoint.x))
+                last_y.append(last_y[-1]-(goalVecEndPoint.y))
                 allButtons[0].buttonActive = False # annars spammar den pga man "klickar" 60 ggr / sek
             except AttributeError:
                 print('could not add -V')
         if(allButtons[1].buttonActive): # perpj_(V)
             try:
-                arrowHistory.append(Arrow.arrow(screen, conv_coord(last_x[-1],last_y[-1]), conv_coord(last_x[-1]-10,last_y[-1]-10)))
-                last_x.append(last_x[-1]-10)
-                last_y.append(last_y[-1]-10)
+                arrowHistory.append(Arrow.arrow(screen, conv_coord(last_x[-1],last_y[-1]), conv_coord(last_x[-1],last_y[-1]+(goalVecEndPoint.y))))
+                last_x.append(last_x[-1])
+                last_y.append(last_y[-1]+(goalVecEndPoint.y))
                 allButtons[1].buttonActive = False # annars spammar den pga man "klickar" 60 ggr / sek
             except AttributeError:
-                print('could not add -V')
+                print('could not add projection of V on x')
         if(allButtons[2].buttonActive): # projection of V on x 
             try:
-                arrowHistory.append(Arrow.arrow(screen, conv_coord(last_x[-1],last_y[-1]), conv_coord(last_x[-1]+10,last_y[-1])))
-                last_x.append(last_x[-1]+10)
+                arrowHistory.append(Arrow.arrow(screen, conv_coord(last_x[-1],last_y[-1]), conv_coord(last_x[-1]+(goalVecEndPoint.x),last_y[-1])))
+                last_x.append(last_x[-1]+(goalVecEndPoint.x))
                 last_y.append(last_y[-1])
                 allButtons[2].buttonActive = False # annars spammar den pga man "klickar" 60 ggr / sek
             except AttributeError:
                 print('could not add projection of V on x')
         if(allButtons[4].buttonActive): # projection of V on y
             try:
-                arrowHistory.append(Arrow.arrow(screen, conv_coord(last_x[-1],last_y[-1]), conv_coord(last_x[-1],last_y[-1]+10)))
+                arrowHistory.append(Arrow.arrow(screen, conv_coord(last_x[-1],last_y[-1]), conv_coord(last_x[-1],last_y[-1]+(goalVecEndPoint.y))))
                 last_x.append(last_x[-1])
-                last_y.append(last_y[-1]+10)
+                last_y.append(last_y[-1]+(goalVecEndPoint.y))
                 allButtons[4].buttonActive = False # annars spammar den pga man "klickar" 60 ggr / sek
             except AttributeError:
                 print('could not add projection of V on x')
@@ -202,15 +206,26 @@ while running:
                 allButtons[3].buttonActive = False 
             except AttributeError:
                 print('could not remove last added arrow')
-            #draw_arrow(screen, conv_coord(0,0), conv_coord(x_rand,y_rand), pygame.Color("red"), 5, 10, 6)
-        #if(allButtons[0].buttonActive): # -V
-            #draw_arrow(screen, conv_coord(0,0), conv_coord(x_rand,0), pygame.Color("green"), 5, 10, 6)
-        #if(allButtons[1].buttonActive): # perpendicular V 
-            #draw_arrow(screen, conv_coord(0,0), conv_coord(0,y_rand), pygame.Color("blue"), 5, 10, 6)
+
+        # Draw user arrows
+        if(len(arrowHistory) > 0):
+            for arrow in arrowHistory:
+                arrow.draw_arrow()
+
+        ## Draw current and goal positions in toolbox 
+        posText = "Current position: ("+str(int(last_x[-1]))+","+str(int(last_y[-1]))+")"
+        displayPos = font2.render(posText, True, (0, 0, 0))
+        screen.blit(displayPos, conv_coord(-28,-14))
         
-    if(len(arrowHistory) > 0):
-        for arrow in arrowHistory:
-            arrow.draw_arrow()
+        goalPosText = "Goal: ("+str(int(goalVecEndPoint.x))+","+str(int(goalVecEndPoint.y))+")"
+        displayGoalPos = font2.render(goalPosText, True, (0, 0, 0))
+        screen.blit(displayGoalPos, conv_coord(-16,-14))
+        
+        # if current point = goal point success!
+        if (int(last_x[-1]) == int(goalVecEndPoint.x) and int(last_y[-1]) == int(goalVecEndPoint.y)):
+            displayPos = font3.render("SUCCESS!", True, (0, 0, 0))
+            screen.blit(displayPos, conv_coord(-22,-5))
+        
 
 
     # flip() the display to put your work on screen
