@@ -40,21 +40,23 @@ will_draw_arrow = False
 # get font object
 font = pygame.font.SysFont('Arial', 8, bold=True) 
 font2 = pygame.font.SysFont('Arial', 12, bold=True) 
-font3 = pygame.font.SysFont('Arial', 40, bold=True) 
+font3 = pygame.font.SysFont('Arial', 40, bold=True)
+font4 = pygame.font.SysFont('Arial', 16, bold=True)
 
 
 # get random vector positions
 startPoint = pygame.Vector2(0,0)
 goalVecEndPoint = pygame.Vector2(random.randint(-5,15),random.randint(-5,15))
-print("goalVecEndPoint is : ",goalVecEndPoint)
 
 x_rand = random.randint(-20,20)
 y_rand = random.randint(-15,15)
 
 
-text = 'Skapa den svarta vektorn V m.h.a vektoraddition'
+welcomeText = 'Skapa den svarta vektorn V m.h.a vektoraddition'
 
-assignmentButton = Buttons.Button(screen, conv_coord(-30,-5).x, conv_coord(-30,-5).y,20*20, 10*20,text)
+#assignmentButton = Buttons.Button(screen, conv_coord(-30,-5).x, conv_coord(-30,-5).y,20*20, 10*20,welcomeText)
+# alternativ startskärm 
+assignmentButton = Buttons.Button(screen, conv_coord(-10,5).x, conv_coord(-10,5).y,20*20, 10*20," ")
 
 projx = Buttons.Button(screen, conv_coord(-28,-11).x, conv_coord(-28,-11).y,4*20,2*20,'Proj_x(V)')
 
@@ -65,10 +67,11 @@ middleButton = Buttons.Button(screen, conv_coord(-22,-11).x, conv_coord(-28,-11)
 
 rightButton = Buttons.Button(screen, conv_coord(-16,-11).x, conv_coord(-28,-11).y,4*20,2*20,'Perpj_n(V)')
 
-undo = Buttons.Button(screen, conv_coord(-28,-7).x, conv_coord(-28,-6).y,4*11,2*11,'undo')
+undo = Buttons.Button(screen, conv_coord(-28,-6).x, conv_coord(-28,-6).y,4*11,2*11,'undo')
 
+info = Buttons.Button(screen, conv_coord(-15,-6).x, conv_coord(-15,-6).y,4*11,2*11,'info')
 
-allButtons = [middleButton,rightButton,projx,undo,projy]
+allButtons = [middleButton,rightButton,projx,undo,projy,info]
 
 
 testArrow = Arrow.arrow(screen, conv_coord(0,0), conv_coord(goalVecEndPoint.x,goalVecEndPoint.y))
@@ -158,7 +161,15 @@ while running:
     #######################
 
     if(not assignmentButton.buttonActive):
-         assignmentButton.process()
+        assignmentButton.process()
+        info1 = font4.render("Skapa den svarta vektorn V m.h.a vektoraddition", True, "white")
+        info2 = font2.render("Proj_x(V) = projektionen av V på x axeln", True, "white")
+        info3 = font2.render("-V = en inverterad vektor V", True, "white")
+        info4 = font2.render("perpn_j(V) = den vinkelräta projektionen av vektorn V på normalen", True, "white")
+        screen.blit(info1, conv_coord(-9,4))
+        screen.blit(info2, conv_coord(-9,2))
+        screen.blit(info3, conv_coord(-9,1))
+        screen.blit(info4, conv_coord(-9,0))
     else:
         pygame.draw.rect(screen, "grey", pygame.Rect(conv_coord(-30,-13).x, conv_coord(-30,-5).y, 20*20, 10*20))
         #draw_arrow(screen, , conv_coord(x_rand,y_rand), pygame.Color("black"), 5, 10, 6)
@@ -198,6 +209,12 @@ while running:
                 allButtons[4].buttonActive = False # annars spammar den pga man "klickar" 60 ggr / sek
             except AttributeError:
                 print('could not add projection of V on x')
+        if(allButtons[5].buttonActive): # projection of V on x 
+            try:
+                assignmentButton.buttonActive = False
+                allButtons[5].buttonActive = False
+            except AttributeError:
+                print('could press info')
         if(allButtons[3].buttonActive and len(arrowHistory)>0): # projection of V on x 
             try:
                 arrow = arrowHistory.pop()
@@ -224,8 +241,8 @@ while running:
         # if current point = goal point success!
         if (int(last_x[-1]) == int(goalVecEndPoint.x) and int(last_y[-1]) == int(goalVecEndPoint.y)):
             displayPos = font3.render("SUCCESS!", True, (0, 0, 0))
-            screen.blit(displayPos, conv_coord(-22,-5))
-        
+            screen.blit(displayPos, conv_coord(-5,16))
+    
 
 
     # flip() the display to put your work on screen
