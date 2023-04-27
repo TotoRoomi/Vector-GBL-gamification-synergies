@@ -7,6 +7,12 @@ The game is about simple Vector addition, subtraction and multiplication. You le
 
 ![vecotor game diagram](Vektorspel_i_python.jpg)
 
+## TO RUN 
+write this in the terminal where gui.py is located. 
+``` 
+python3 gui.py
+```
+
 ## To-Do
 - Siffror på spelplanen
     
