@@ -164,14 +164,14 @@ while running:
 
     if(not assignmentButton.buttonActive):
         assignmentButton.process()
-        info1 = font4.render("Skapa den svarta vektorn V m.h.a vektoraddition", True, "white")
+        info1 = font4.render("Skapa vektorn V m.h.a vektoraddition", True, "white")
         info2 = font2.render("Proj_x(V) = projektionen av V på x axeln", True, "white")
         info3 = font2.render("-V = en inverterad vektor V", True, "white")
         info4 = font2.render("perpn_j(V) = den vinkelräta projektionen av vektorn V på normalen", True, "white")
         screen.blit(info1, conv_coord(-9,4))
         screen.blit(info2, conv_coord(-9,2))
-        screen.blit(info3, conv_coord(-9,1))
-        screen.blit(info4, conv_coord(-9,0))
+        screen.blit(info3, conv_coord(-9,0))
+        screen.blit(info4, conv_coord(-9,-2))
     else:
         pygame.draw.rect(screen, "grey", pygame.Rect(conv_coord(-30,-13).x, conv_coord(-30,-5).y, 20*20, 10*20))
         #draw_arrow(screen, , conv_coord(x_rand,y_rand), pygame.Color("black"), 5, 10, 6)
