@@ -1,5 +1,5 @@
 import pygame
-#import gui
+import Gameloop
 import checkbox
 import Buttons
 
@@ -72,7 +72,9 @@ def main():
         # CLICK BUTTONS 
         if(checkButtons[0].buttonActive): # Start
             try:
-                
+                game = Gameloop.gameloop(screen, hasScore, hasStreak, hasLeaderboard, hasDifferentGoals, hasWinningCondition, hasLoosingCondition)
+                game.start()
+                screen = pygame.display.set_mode([500, 500])
                 checkButtons[0].buttonActive = False # annars spammar den pga man "klickar" 60 ggr / sek
             except AttributeError:
                 print('start doesnt work')
