@@ -9,7 +9,7 @@ class gameloop():
         
         self.screen                 = screen
         self.hasScore               = hasScore
-        self.hasStreal              = hasStreak
+        self.hasStreak              = hasStreak
         self.hasLeaderboard         = hasLeaderboard
         self.hasDifferentGoals      = hasDifferentGoals
         self.hasWinningCondition    = hasWinningCondition
@@ -234,7 +234,10 @@ class gameloop():
                 self.drawButtons()
                 self.drawArrows()
                 self.drawText()
-
+                # if score
+                # if streak
+                # if leaderboards
+                # if 
             # fill the screen with a color to wipe away anything from last frame
                   
 
