@@ -85,6 +85,8 @@ last_y = list()
 last_x.append(0)
 last_y.append(0)
 
+winningState = False 
+
 # GAME LOOP
 while running:
     # poll for events
@@ -174,10 +176,14 @@ while running:
         screen.blit(info4, conv_coord(-9,-2))
     else:
         pygame.draw.rect(screen, "grey", pygame.Rect(conv_coord(-30,-13).x, conv_coord(-30,-5).y, 20*20, 10*20))
-        #draw_arrow(screen, , conv_coord(x_rand,y_rand), pygame.Color("black"), 5, 10, 6)
+        # Draws goal arrow
         goalArrows[-1].draw_arrow()
-        for button in allButtons:
-            button.process()
+        # if not winningState, draw all buttons, else draw only "next game" button
+        if(not winningState):
+            for button in allButtons:
+                button.process()
+        else: 
+            allButtons[6].process()
 
         if(allButtons[0].buttonActive): # -V 
             try:
@@ -217,7 +223,7 @@ while running:
                 allButtons[5].buttonActive = False
             except AttributeError:
                 print('could press info')
-        if(allButtons[3].buttonActive and len(arrowHistory)>0): # projection of V on x 
+        if(allButtons[3].buttonActive and len(arrowHistory)>0): # Undo  
             try:
                 arrow = arrowHistory.pop()
                 last_x.pop()
@@ -225,7 +231,7 @@ while running:
                 allButtons[3].buttonActive = False 
             except AttributeError:
                 print('could not remove last added arrow')
-        if(allButtons[6].buttonActive): # projection of V on x 
+        if(allButtons[6].buttonActive): # next game
             try:
                 goalVecEndPoint.append(pygame.Vector2(random.randint(-5,15),random.randint(-5,15)))
                 goalArrows.append(Arrow.arrow(screen, conv_coord(0,0), conv_coord(goalVecEndPoint[-1].x,goalVecEndPoint[-1].y)))
@@ -234,7 +240,7 @@ while running:
                 last_y.clear()
                 last_x.append(0)
                 last_y.append(0)
-
+                winningState = False
                 allButtons[6].buttonActive = False 
             except AttributeError:
                 print('could not start next game')
@@ -255,9 +261,14 @@ while running:
         
         # if current point = goal point success!
         if (int(last_x[-1]) == int(goalVecEndPoint[-1].x) and int(last_y[-1]) == int(goalVecEndPoint[-1].y)):
+            winningState = True
             displayPos = font3.render("SUCCESS!", True, (0, 0, 0))
             screen.blit(displayPos, conv_coord(-5,16))
-    
+            statsMessage = "It took you " + str(len(arrowHistory))+" steps to win"
+            displayStats = font2.render(statsMessage, True, (0, 0, 0))
+            screen.blit(displayStats, conv_coord(-27,-8))
+           
+
 
 
     # flip() the display to put your work on screen
