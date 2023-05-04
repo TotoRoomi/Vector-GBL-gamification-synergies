@@ -3,7 +3,7 @@ import pygame
 import random
 import Arrow
 import Buttons
-
+ 
 class gameloop():
     def __init__(self,screen,hasScore, hasStreak,hasLeaderboard, hasDifferentGoals,hasWinningCondition,hasLoosingCondition):
         
