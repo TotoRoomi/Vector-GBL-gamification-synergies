@@ -2,7 +2,6 @@ import pygame
 import random
 import Arrow
 import Buttons
-import time 
 
 # pygame setup
 pygame.init()
@@ -133,32 +132,7 @@ while running:
     # loop thorugh arrow object list and draw them
 
     # Draw an arrow from origo to the mouse tip
-    '''
-    if( (not will_draw_arrow) & pygame.mouse.get_pressed()[0]):
-        center = pygame.Vector2(pygame.mouse.get_pos())
-        will_draw_arrow = True
-    if(will_draw_arrow & pygame.mouse.get_pressed()[0]):
-        end = pygame.Vector2(pygame.mouse.get_pos())
-        #draw_arrow(screen, center, end, pygame.Color("dodgerblue"), 5, 10, 6)
-   '''
-    
    
-   ## TEST
-    '''
-    # get font object
-    font = pygame.font.SysFont('Arial', 12, bold=True)    
-
-    # render a given font into an image
-    img = font.render('0', True,
-                    pygame.Color("black"),
-                    pygame.Color("white"))
-
-    # and finally put it onto the surface.
-    # the code below centres text image
-    screen.blit(img, ((screen.get_width() - img.get_width())/2,
-                    (screen.get_height() - img.get_height())/2))
-   '''
-   ## TEST 
 
     #######################
     ##     BUTTONS       ##
