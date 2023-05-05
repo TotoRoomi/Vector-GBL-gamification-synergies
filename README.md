@@ -16,8 +16,15 @@ python3 gui.py
 ## To-Do
 - new game after success 
 - Score
-
-    
+- BUG: crash at loosing in score() had 27 points. 
+Traceback (most recent call last):
+  File "/Users/toto/Programming/VectorGame/main.py", line 138, in <module>
+    main()
+  File "/Users/toto/Programming/VectorGame/main.py", line 76, in main
+    game.start()
+  File "/Users/toto/Programming/VectorGame/Gameloop.py", line 341, in start
+    self.score()
+TypeError: 'int' object is not callable
 
 ## Spelfunktioner
 scenario och utmaning 

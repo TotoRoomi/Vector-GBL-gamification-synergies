@@ -88,6 +88,7 @@ def main():
             hasScore = False
         if(checkButtons[2].buttonActive): # Streak
             try:
+                hasStreak = True
                 screen.blit(xMark, pygame.Vector2([43,279]))
             except AttributeError:
                 print('start doesnt work')

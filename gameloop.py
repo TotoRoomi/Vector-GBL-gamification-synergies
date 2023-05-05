@@ -65,6 +65,18 @@ class gameloop():
 
         #### 
         self.winningState   = False 
+        self.loosingState   = False
+
+        #################################################################################################################################
+        ############# GAMIFICATION SETUP ################################################################################################
+        #################################################################################################################################
+
+        self.currentScore = 0
+        self.currentStreak = 0
+        self.addScore = False
+        self.addStreak = False
+        self.minSteps = 2 # Starting value
+        
 
 
     def conv_coord(self, x_coord,y_coord):
@@ -115,19 +127,23 @@ class gameloop():
    
     def drawInfoButton(self):
         self.assignmentButton.process()
-        info1 = self.font4.render("Skapa vektorn V m.h.a vektoraddition", True, "white")
-        info2 = self.font2.render("Proj_x(V) = projektionen av V på x axeln", True, "white")
-        info3 = self.font2.render("-V = en inverterad vektor V", True, "white")
-        info4 = self.font2.render("perpn_j(V) = den vinkelräta projektionen av vektorn V på normalen", True, "white")
+        info1 = self.font4.render("Create the vector V with vector addition", True, "white")
+        info2 = self.font2.render("Proj_x(V) = projection of V on the x-axis", True, "white")
+        info3 = self.font2.render("-V = The negative vector", True, "white")
+        info4 = self.font2.render("perpn_j(V) = the perpendicular projection of V on the normal", True, "white")
         self.screen.blit(info1, self.conv_coord(-9,4))
         self.screen.blit(info2, self.conv_coord(-9,2))
         self.screen.blit(info3, self.conv_coord(-9,0))
         self.screen.blit(info4, self.conv_coord(-9,-2))
+        if(self.hasLoosingCondition):
+            goalInfo = "win the game with no more than " + str(self.minSteps) + " steps"
+            displayGoalMessage = self.font2.render(goalInfo, True,"white")
+            self.screen.blit(displayGoalMessage, self.conv_coord(-9,-4))
 
     def drawButtons(self):
         pygame.draw.rect(self.screen, "grey", pygame.Rect(self.conv_coord(-30,-13).x, self.conv_coord(-30,-5).y, 20*20, 10*20))
         # if not winningState, draw all buttons, else draw only "next game" button
-        if(not self.winningState):
+        if(not self.winningState and not self.loosingState):
             for button in self.allButtons:
                 button.process()
         else: 
@@ -183,12 +199,22 @@ class gameloop():
             try:
                 self.goalVecEndPoint.append(pygame.Vector2(random.randint(-5,15),random.randint(-5,15)))
                 self.goalArrows.append(Arrow.arrow(self.screen, self.conv_coord(0,0), self.conv_coord(self.goalVecEndPoint[-1].x,self.goalVecEndPoint[-1].y)))
-                self.arrowHistory.clear()
                 self.last_x.clear()
                 self.last_y.clear()
                 self.last_x.append(0)
                 self.last_y.append(0)
+                if(self.winningState==True):
+                    if(self.hasScore):
+                        self.addScore = True
+                    else:
+                        self.arrowHistory.clear()
+                    self.addStreak = True
+                    if(self.hasLoosingCondition):
+                        self.minSteps += 3
+                else:
+                    self.arrowHistory.clear()
                 self.winningState = False
+                self.loosingState = False 
                 self.allButtons[6].buttonActive = False 
             except AttributeError:
                 print('could not start next game')
@@ -208,17 +234,78 @@ class gameloop():
         goalPosText = "Goal: ("+str(int(self.goalVecEndPoint[-1].x))+","+str(int(self.goalVecEndPoint[-1].y))+")"
         displayGoalPos = self.font2.render(goalPosText, True, (0, 0, 0))
         self.screen.blit(displayGoalPos, self.conv_coord(-16,-14))
-        
+    
+    def goalManager(self):
         # if current point = goal point success!
         if (int(self.last_x[-1]) == int(self.goalVecEndPoint[-1].x) and int(self.last_y[-1]) == int(self.goalVecEndPoint[-1].y)):
-            self.winningState = True
-            displayPos = self.font3.render("SUCCESS!", True, (0, 0, 0))
-            self.screen.blit(displayPos, self.conv_coord(-5,16))
-            statsMessage = "It took you " + str(len(self.arrowHistory))+" steps to win"
-            displayStats = self.font2.render(statsMessage, True, (0, 0, 0))
-            self.screen.blit(displayStats, self.conv_coord(-27,-8))
+            steps = len(self.arrowHistory)
+            if(self.hasLoosingCondition and steps<self.minSteps):
+                displayFail = self.font3.render("FAIL!", True, (0, 0, 0))
+                self.screen.blit(displayFail, self.conv_coord(-5,16))
+                failMessage = "You had "+str(self.minSteps-steps)+" steps too few"
+                displayFail = self.font2.render(failMessage, True, (0, 0, 0))
+                self.screen.blit(displayFail, self.conv_coord(-27,-8))
+                if(self.hasScore):
+                    self.score=0
+                if(self.hasStreak):
+                    self.streak=0
+                self.loosingState = True
+            else:
+                self.winningState = True
+                displayPos = self.font3.render("SUCCESS!", True, (0, 0, 0))
+                self.screen.blit(displayPos, self.conv_coord(-5,16))
+                statsMessage = "It took you " + str(len(self.arrowHistory))+" steps to win"
+                displayStats = self.font2.render(statsMessage, True, (0, 0, 0))
+                self.screen.blit(displayStats, self.conv_coord(-27,-8))
 
+    #################################################################################################################################
+    ############# GAMIFICATIONS #####################################################################################################
+    #################################################################################################################################
 
+    def score(self):
+        maxScore = 10
+        steps = len(self.arrowHistory)
+        scoreMessage = "Score:" + str(self.currentScore)
+        displayScore = self.font4.render(scoreMessage, True, (0, 0, 0))
+        self.screen.blit(displayScore, self.conv_coord(-31,17))
+        
+        minSteps = self.minSteps
+        if(self.hasLoosingCondition):
+            minSteps-=3
+
+        if(self.addScore==True):
+            # reset
+            self.addScore = False
+            self.arrowHistory.clear()
+            # calculate score
+            if(steps==minSteps):
+                self.currentScore += maxScore
+            elif(steps>minSteps and maxScore - (steps-minSteps) >0):
+                self.currentScore += maxScore - (steps-minSteps)
+            else:
+                self.currentScore += 1
+            
+        
+    def streak(self):
+        streakMessage = "Streak:" + str(self.currentStreak)
+        displayStreak = self.font4.render(streakMessage, True, (0, 0, 0))
+        self.screen.blit(displayStreak, self.conv_coord(-31,16))
+        if(self.addStreak==True):
+            self.addStreak = False
+            self.currentStreak += 1
+
+    def drawSteps(self):
+        minStepMessage = "MIN steps:" + str(self.minSteps)
+        displayMinSteps = self.font4.render(minStepMessage, True, (0, 0, 0))
+        self.screen.blit(displayMinSteps, self.conv_coord(-31,15))
+        stepMessage = "Steps:" + str(len(self.arrowHistory))
+        displayStep = self.font4.render(stepMessage, True, (0, 0, 0))
+        self.screen.blit(displayStep, self.conv_coord(-31,14))
+        
+    
+        
+
+        
 
     #################################################################################################################################
     ############# GAME LOOP #########################################################################################################
@@ -248,12 +335,21 @@ class gameloop():
                 self.drawButtons()
                 self.drawArrows()
                 self.drawText()
-                # if score
-                # if streak
-                # if leaderboards
-                # if differentGoals
-                # if winningCondition
-                # if loosingCondition
+                self.goalManager()
+
+                if (self.hasScore):
+                    self.score()
+
+                if (self.hasStreak):
+                    self.streak()
+                    
+                if (self.hasLoosingCondition):
+                    self.drawSteps()
+                
+                # if hasLeaderboards
+                # if hasDifferentGoals
+            
+                # reach goal with no less than minSteps steps
                 
             # fill the screen with a color to wipe away anything from last frame
                   
