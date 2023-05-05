@@ -77,7 +77,12 @@ class gameloop():
         delta_x = 20 
         delta_y = 20
         return pygame.Vector2([(self.screen.get_width()/2 + x_coord*delta_x),(self.screen.get_height()/2 + (-1)*y_coord*delta_y)])
-    
+
+    #################################################################################################################################
+    ############# GAME FUNCTIONS ####################################################################################################
+    #################################################################################################################################
+
+
     def drawGraph(self):
          # Draw x and y lines covering the screen
         delta_y = 0
@@ -121,8 +126,6 @@ class gameloop():
 
     def drawButtons(self):
         pygame.draw.rect(self.screen, "grey", pygame.Rect(self.conv_coord(-30,-13).x, self.conv_coord(-30,-5).y, 20*20, 10*20))
-        # Draws goal arrow
-        self.goalArrows[-1].draw_arrow()
         # if not winningState, draw all buttons, else draw only "next game" button
         if(not self.winningState):
             for button in self.allButtons:
@@ -215,6 +218,14 @@ class gameloop():
             displayStats = self.font2.render(statsMessage, True, (0, 0, 0))
             self.screen.blit(displayStats, self.conv_coord(-27,-8))
 
+
+
+    #################################################################################################################################
+    ############# GAME LOOP #########################################################################################################
+    #################################################################################################################################
+
+
+
     def start(self):
         while self.running:
             # poll for events
@@ -231,13 +242,19 @@ class gameloop():
             if(not self.assignmentButton.buttonActive):
                 self.drawInfoButton()
             else:
+                # Draw latest goal arrow
+                self.goalArrows[-1].draw_arrow()
+
                 self.drawButtons()
                 self.drawArrows()
                 self.drawText()
                 # if score
                 # if streak
                 # if leaderboards
-                # if 
+                # if differentGoals
+                # if winningCondition
+                # if loosingCondition
+                
             # fill the screen with a color to wipe away anything from last frame
                   
 
