@@ -1,6 +1,7 @@
 import pygame
 import Gameloop
 import checkbox
+import Leaderboard
 import Buttons
 
 
@@ -19,6 +20,8 @@ loosingConditionTxt = font.render("Add losing condition", True, "black")
 
 
 def main():
+    lb = Leaderboard.leaderboard()
+
     hasScore = False
     hasStreak = False
     hasLeaderboard = False

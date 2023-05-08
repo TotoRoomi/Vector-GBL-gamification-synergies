@@ -246,9 +246,9 @@ class gameloop():
                 displayFail = self.font2.render(failMessage, True, (0, 0, 0))
                 self.screen.blit(displayFail, self.conv_coord(-27,-8))
                 if(self.hasScore):
-                    self.score=0
+                    self.currentScore=0
                 if(self.hasStreak):
-                    self.streak=0
+                    self.currentStreak=0
                 self.loosingState = True
             else:
                 self.winningState = True
@@ -271,7 +271,7 @@ class gameloop():
         
         minSteps = self.minSteps
         if(self.hasLoosingCondition):
-            minSteps-=3
+            minSteps=minSteps-3
 
         if(self.addScore==True):
             # reset
