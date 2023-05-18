@@ -1,0 +1,14 @@
+Toto 10 5
+Toto 5 2
+Harald 99 3
+Toto 120 2
+Harald 3900 3
+Toto 1 8
+Harald 70 8
+Wenu 10 1
+asd 0 0
+wtf 282 273
+nufarvise 10 1
+Jasso 20 2
+test 10 1
+Hell 10 1
