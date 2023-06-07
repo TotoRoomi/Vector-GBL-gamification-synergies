@@ -13,6 +13,9 @@ class streak():
 
     def increase(self):
         self.currentStreak += 1
+
+    def reset(self):
+        self.currentStreak = 0
     
     def draw(self):
         streakMessage = "Streak:" + str(self.currentStreak)

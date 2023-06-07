@@ -4,6 +4,8 @@ import random
 import Arrow
 import Buttons
 import Leaderboard
+import Score 
+import Streak 
 
 class gameloop():
     def __init__(self,screen,hasScore, hasStreak,hasLeaderboard, hasDifferentGoals,hasLosingCondition):
@@ -78,6 +80,11 @@ class gameloop():
         self.addStreak = False
         self.minSteps = 2 # Starting value
         self.saveScoreForLeaderboard = []
+
+        self.score = Score.score(self.screen,self.conv_coord(-31,17))
+        self.streak = Streak.streak(self.screen, self.conv_coord(-31,16))
+        
+
 
 
 
@@ -252,13 +259,15 @@ class gameloop():
                 self.screen.blit(displayFail, self.conv_coord(-27,-8))
                 if(self.hasLeaderboard and not self.hasOpenedSaveWin):
                     leaderboard = Leaderboard.leaderboard()
-                    leaderboard.saveScore(self.currentScore,self.currentStreak)
+                    leaderboard.saveScore(self.score.get(),self.streak.get())
                     self.hasOpenedSaveWin = True
-                    self.saveScoreForLeaderboard = [self.currentScore,self.currentStreak]
+                    self.saveScoreForLeaderboard = [self.score.get(),self.streak.get()]
                 if(self.hasScore):
-                    self.currentScore=0
+                    self.score.reset()
+                    #self.currentScore=0
                 if(self.hasStreak):
-                    self.currentStreak=0
+                    self.streak.reset()
+                    #self.currentStreak=0
                 self.losingState = True
             else:
                 self.winningState = True
@@ -272,12 +281,13 @@ class gameloop():
     ############# GAMIFICATIONS #####################################################################################################
     #################################################################################################################################
 
-    def score(self):
+    def scoreManager(self):
         maxScore = 10
         steps = len(self.arrowHistory)
-        scoreMessage = "Score:" + str(self.currentScore)
-        displayScore = self.font4.render(scoreMessage, True, (0, 0, 0))
-        self.screen.blit(displayScore, self.conv_coord(-31,17))
+        self.score.draw()
+        #scoreMessage = "Score:" + str(self.currentScore)
+        #displayScore = self.font4.render(scoreMessage, True, (0, 0, 0))
+        #self.screen.blit(displayScore, self.conv_coord(-31,17))
 
         minSteps = self.minSteps
         if(self.hasLosingCondition):
@@ -289,20 +299,25 @@ class gameloop():
             self.arrowHistory.clear()
             # calculate score
             if(steps==minSteps):
-                self.currentScore += maxScore
+                self.score.increase(maxScore);
+                #self.currentScore += maxScore
             elif(steps>minSteps and maxScore - (steps-minSteps) >0):
-                self.currentScore += maxScore - (steps-minSteps)
+                self.score.manualIncrease(maxScore - (steps-minSteps))
+                #self.currentScore += maxScore - (steps-minSteps)
             else:
-                self.currentScore += 1
+                self.score.increase(1)
+                #self.currentScore += 1
 
 
-    def streak(self):
-        streakMessage = "Streak:" + str(self.currentStreak)
-        displayStreak = self.font4.render(streakMessage, True, (0, 0, 0))
-        self.screen.blit(displayStreak, self.conv_coord(-31,16))
+    def streakManager(self):
+        self.streak.draw()
+        #streakMessage = "Streak:" + str(self.currentStreak)
+        #displayStreak = self.font4.render(streakMessage, True, (0, 0, 0))
+        #self.screen.blit(displayStreak, self.conv_coord(-31,16))
         if(self.addStreak==True):
             self.addStreak = False
-            self.currentStreak += 1
+            self.streak.increase()
+            #self.currentStreak += 1
 
     def drawSteps(self):
         minStepMessage = "MIN steps:" + str(self.minSteps)
@@ -348,10 +363,10 @@ class gameloop():
                 self.goalManager()
 
                 if (self.hasScore):
-                    self.score()
+                    self.scoreManager()
 
                 if (self.hasStreak):
-                    self.streak()
+                    self.streakManager()
 
                 if (self.hasLosingCondition):
                     self.drawSteps()

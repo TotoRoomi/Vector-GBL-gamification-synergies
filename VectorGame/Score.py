@@ -13,6 +13,12 @@ class score():
 
     def increase(self, multplier):
         self.currentScore += 1*multplier
+
+    def manualIncrease(self, value):
+        self.currentScore += value 
+    
+    def reset(self):
+        self.currentScore = 0
     
     def draw(self):
         scoreMessage = "Score:" + str(self.currentScore)
